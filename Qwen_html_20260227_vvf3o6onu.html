@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Мой SkillClub</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', system-ui, sans-serif;
+    }
+
+    :root {
+      --bg: #121212;
+      --card-bg: #1e1e1e;
+      --surface: #252525;
+      --text-primary: #ffffff;
+      --text-secondary: #b0b0b0;
+      --text-muted: #7a7a7a;
+      --border: #333333;
+      --accent: #FFB300; /* Янтарный — тёплый акцент, символ Краснодарского края */
+      --success: #4CAF50;
+      --warning: #FF9800;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    /* Шапка */
+    header {
+      background: var(--surface);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 0;
+    }
+
+    .logo {
+      font-size: 1.6rem;
+      font-weight: 800;
+      background: linear-gradient(to right, #ffffff, var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .user-actions {
+      display: flex;
+      gap: 1.2rem;
+      align-items: center;
+    }
+
+    .notification-btn, .profile-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--card-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-primary);
+      font-weight: bold;
+      position: relative;
+      border: 1px solid var(--border);
+    }
+
+    .notification-badge {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      background: #f3205a;
+      color: white;
+      font-size: 0.65rem;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Основной контент */
+    main {
+      padding: 1.5rem 0;
+    }
+
+    .greeting h1 {
+      font-size: 1.8rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .greeting p {
+      color: var(--text-secondary);
+    }
+
+    /* Блок баланса */
+    .balance-card {
+      background: linear-gradient(135deg, #1a1a1a, #2a2a2a);
+      border: 1px solid var(--border);
+      color: white;
+      padding: 1.2rem;
+      border-radius: 16px;
+      margin-bottom: 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .balance-info h2 {
+      font-size: 1.4rem;
+      color: var(--accent);
+    }
+
+    .balance-info p {
+      color: var(--text-secondary);
+    }
+
+    /* Быстрые действия */
+    .quick-actions {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+
+    .action-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 1.2rem 0.8rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .action-btn:hover {
+      border-color: var(--accent);
+      transform: translateY(-3px);
+      background: #2a2a2a;
+    }
+
+    .action-btn i {
+      font-size: 1.8rem;
+      display: block;
+      margin-bottom: 0.5rem;
+      color: var(--accent);
+    }
+
+    /* Раздел "Мои пары" */
+    .section-title {
+      font-size: 1.4rem;
+      margin: 1.5rem 0 1rem;
+      color: var(--accent);
+    }
+
+    .pairs-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .pair-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 1.2rem;
+      border: 1px solid var(--border);
+    }
+
+    .pair-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 0.8rem;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #000;
+      font-weight: bold;
+      margin-right: 12px;
+      flex-shrink: 0;
+    }
+
+    .pair-name {
+      font-weight: 600;
+    }
+
+    .pair-university {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .pair-skills {
+      margin: 0.6rem 0;
+      font-size: 0.95rem;
+    }
+
+    .skill-you-teach {
+      color: #66bb6a;
+    }
+
+    .skill-you-learn {
+      color: #FFB300;
+    }
+
+    .next-meeting {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      margin: 0.5rem 0;
+    }
+
+    .chat-btn {
+      background: rgba(255, 179, 0, 0.15);
+      color: var(--accent);
+      border: none;
+      padding: 0.4rem 1rem;
+      border-radius: 20px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .chat-btn:hover {
+      background: rgba(255, 179, 0, 0.25);
+    }
+
+    /* Нижнее меню (мобильное) */
+    .bottom-nav {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 0.6rem 0;
+    }
+
+    .nav-items {
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .nav-item.active {
+      color: var(--accent);
+    }
+
+    .nav-icon {
+      font-size: 1.4rem;
+      margin-bottom: 0.2rem;
+    }
+
+    /* Адаптив */
+    @media (max-width: 768px) {
+      .bottom-nav {
+        display: flex;
+      }
+
+      .quick-actions {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Шапка -->
+  <header>
+    <div class="container header-content">
+      <div class="logo">Skill<span>Club</span></div>
+      <div class="user-actions">
+        <div class="notification-btn">
+          🔔
+          <div class="notification-badge">2</div>
+        </div>
+        <div class="profile-btn">И</div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Основной контент -->
+  <main class="container">
+    <div class="greeting">
+      <h1>Привет, Иван! 👋</h1>
+      <p>У тебя 2 активных пары и 5 баллов обмена</p>
+    </div>
+
+    <!-- Баланс -->
+    <div class="balance-card">
+      <div class="balance-info">
+        <h2>5 ⚖️</h2>
+        <p>Баллов обмена</p>
+      </div>
+      <div>
+        <button class="chat-btn">Пополнить</button>
+      </div>
+    </div>
+
+    <!-- Быстрые действия -->
+    <div class="quick-actions">
+      <div class="action-btn">
+        <div>📚</div>
+        <div>Чему<br>научиться</div>
+      </div>
+      <div class="action-btn">
+        <div>💡</div>
+        <div>Чему<br>научить</div>
+      </div>
+      <div class="action-btn">
+        <div>🧠</div>
+        <div>Мои<br>навыки</div>
+      </div>
+      <div class="action-btn">
+        <div>⚖️</div>
+        <div>Баланс</div>
+      </div>
+    </div>
+
+    <!-- Мои пары -->
+    <h2 class="section-title">Мои пары</h2>
+    <div class="pairs-list">
+      <!-- Пара 1 -->
+      <div class="pair-card">
+        <div class="pair-header">
+          <div class="avatar">А</div>
+          <div>
+            <div class="pair-name">Анна Петрова</div>
+            <div class="pair-university">КубГУ</div>
+          </div>
+        </div>
+        <div class="pair-skills">
+          <div class="skill-you-teach">Ты учишь: <strong>Python</strong></div>
+          <div class="skill-you-learn">Ты учишься: <strong>Видеомонтаж</strong></div>
+        </div>
+        <div class="next-meeting">Следующая встреча: 15 ноя, 18:00</div>
+        <button class="chat-btn">Открыть чат</button>
+      </div>
+
+      <!-- Пара 2 -->
+      <div class="pair-card">
+        <div class="pair-header">
+          <div class="avatar">М</div>
+          <div>
+            <div class="pair-name">Максим Сидоров</div>
+            <div class="pair-university">КубГТУ</div>
+          </div>
+        </div>
+        <div class="pair-skills">
+          <div class="skill-you-teach">Ты учишь: <strong>Git</strong></div>
+          <div class="skill-you-learn">Ты учишься: <strong>Английский (B1)</strong></div>
+        </div>
+        <div class="next-meeting">Ожидает подтверждения времени</div>
+        <button class="chat-btn">Открыть чат</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- Нижнее меню (для мобильных) -->
+  <div class="bottom-nav">
+    <div class="nav-items">
+      <div class="nav-item active">
+        <div class="nav-icon">🏠</div>
+        <div>Главная</div>
+      </div>
+      <div class="nav-item">
+        <div class="nav-icon">🔍</div>
+        <div>Поиск</div>
+      </div>
+      <div class="nav-item">
+        <div class="nav-icon">💬</div>
+        <div>Чаты</div>
+      </div>
+      <div class="nav-item">
+        <div class="nav-icon">👤</div>
+        <div>Профиль</div>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
